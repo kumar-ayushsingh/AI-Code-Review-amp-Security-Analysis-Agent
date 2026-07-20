@@ -23,7 +23,7 @@ import ast
 import re
 from typing import List, Set
 
-from ..models import Finding, Severity, SmellType
+from shared.models import Finding, Severity, SmellType
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -112,7 +112,8 @@ def _check_name_python(
             severity=sev,
             line_number=line_no,
             symbol=name,
-            description=(
+            source_agent="code_analysis",
+                    description=(
                 f"Single-letter {context} name '{name}' is not self-documenting. "
                 f"Use a descriptive name that reflects its purpose."
             ),
@@ -126,7 +127,8 @@ def _check_name_python(
             severity=Severity.MEDIUM,
             line_number=line_no,
             symbol=name,
-            description=(
+            source_agent="code_analysis",
+                    description=(
                 f"Generic {context} name '{name}' conveys no domain meaning. "
                 f"Replace with a name that describes the value's role."
             ),
@@ -249,7 +251,8 @@ def _check_java_name(
             severity=Severity.HIGH,
             line_number=line_no,
             symbol=name,
-            description=(
+            source_agent="code_analysis",
+                    description=(
                 f"Single-letter {context} name '{name}' is not self-documenting. "
                 f"Use a descriptive name that reflects its purpose."
             ),
@@ -262,7 +265,8 @@ def _check_java_name(
             severity=Severity.MEDIUM,
             line_number=line_no,
             symbol=name,
-            description=(
+            source_agent="code_analysis",
+                    description=(
                 f"Generic {context} name '{name}' conveys no domain meaning. "
                 f"Replace with a name that describes the value's role."
             ),

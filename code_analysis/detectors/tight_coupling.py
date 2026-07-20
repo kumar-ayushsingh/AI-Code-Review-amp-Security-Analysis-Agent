@@ -32,7 +32,7 @@ import re
 from collections import defaultdict
 from typing import List, Set
 
-from ..models import Finding, Severity, SmellType
+from shared.models import Finding, Severity, SmellType
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -149,7 +149,8 @@ def _detect_python_coupling(lines: List[str]) -> List[Finding]:
                 severity=sev,
                 line_number=node.lineno,
                 symbol=node.name,
-                description=(
+                source_agent="code_analysis",
+                    description=(
                     f"Class '{node.name}' has a fan-out of {fan_out} external "
                     f"dependencies: {top10}{ellipsis_str}. "
                     f"High fan-out indicates tight coupling; introduce abstractions "
@@ -172,6 +173,7 @@ def _detect_python_coupling(lines: List[str]) -> List[Finding]:
                     type=SmellType.TIGHT_COUPLING,
                     severity=sev,
                     line_number=line_no,
+                    source_agent="code_analysis",
                     description=(
                         f"Call chain '{chain}' has depth {depth} (Law of Demeter "
                         f"violation). Each step couples you to an internal detail. "
@@ -243,7 +245,8 @@ def _detect_java_coupling(lines: List[str]) -> List[Finding]:
                         severity=sev,
                         line_number=current_class_line,
                         symbol=current_class,
-                        description=(
+                        source_agent="code_analysis",
+                    description=(
                             f"Class '{current_class}' imports {len(imports)} external "
                             f"packages. High fan-out indicates tight coupling; introduce "
                             f"abstractions or dependency injection."
@@ -277,7 +280,8 @@ def _detect_java_coupling(lines: List[str]) -> List[Finding]:
                         severity=Severity.MEDIUM,
                         line_number=line_no,
                         symbol=ctor_name,
-                        description=(
+                        source_agent="code_analysis",
+                    description=(
                             f"Constructor '{ctor_name}' instantiates concrete class "
                             f"'{concrete_class}' directly (line {line_no}). "
                             f"This hard-wires the dependency; prefer constructor "
@@ -302,6 +306,7 @@ def _detect_java_coupling(lines: List[str]) -> List[Finding]:
                     type=SmellType.TIGHT_COUPLING,
                     severity=sev,
                     line_number=line_no,
+                    source_agent="code_analysis",
                     description=(
                         f"Call chain '{chain}' has depth {depth} (Law of Demeter "
                         f"violation). Introduce a method on the intermediate object."
@@ -318,7 +323,8 @@ def _detect_java_coupling(lines: List[str]) -> List[Finding]:
                 severity=sev,
                 line_number=current_class_line,
                 symbol=current_class,
-                description=(
+                source_agent="code_analysis",
+                    description=(
                     f"Class '{current_class}' imports {len(imports)} external "
                     f"packages. Introduce abstractions or dependency injection."
                 ),

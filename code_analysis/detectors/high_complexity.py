@@ -59,7 +59,7 @@ import ast
 import re
 from typing import List
 
-from ..models import Finding, Severity, SmellType
+from shared.models import Finding, Severity, SmellType
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -232,7 +232,8 @@ def _detect_python(lines: List[str]) -> List[Finding]:
                 severity=cc_sev,
                 line_number=node.lineno,
                 symbol=node.name,
-                description=(
+                source_agent="code_analysis",
+                    description=(
                     f"Function '{node.name}' has cyclomatic complexity {cc} "
                     f"(threshold: 5). "
                     f"{'Critical: extremely difficult to test exhaustively. ' if cc >= 21 else ''}"
@@ -254,7 +255,8 @@ def _detect_python(lines: List[str]) -> List[Finding]:
                 severity=depth_sev,
                 line_number=node.lineno,
                 symbol=node.name,
-                description=(
+                source_agent="code_analysis",
+                    description=(
                     f"Function '{node.name}' has a maximum control-flow nesting "
                     f"depth of {max_depth} (threshold: 3). "
                     f"Deeply nested code is hard to read and test. "
@@ -336,6 +338,7 @@ def _detect_java(lines: List[str]) -> List[Finding]:
                     severity=sev,
                     line_number=method_start_line,
                     symbol=method_name,
+                    source_agent="code_analysis",
                     description=(
                         f"Method '{method_name}' has cyclomatic complexity {cc}. "
                         f"{'Critical: extremely difficult to test exhaustively. ' if cc >= 21 else ''}"

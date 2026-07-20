@@ -48,7 +48,7 @@ import re
 from collections import defaultdict
 from typing import List, Tuple
 
-from ..models import Finding, Severity, SmellType
+from shared.models import Finding, Severity, SmellType
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -131,7 +131,8 @@ def _detect_token_clones(
                 type=SmellType.DUPLICATE_CODE,
                 severity=sev,
                 line_number=ref_line,
-                description=(
+                source_agent="code_analysis",
+                    description=(
                     f"Duplicate block of {min_block_lines}+ lines found at "
                     f"lines {ref_line}-{ref_line + min_block_lines - 1} and "
                     f"{dup_line}-{dup_line + min_block_lines - 1}. "
@@ -262,6 +263,7 @@ def _detect_structural_clones(lines: List[str]) -> List[Finding]:
                     type=SmellType.DUPLICATE_CODE,
                     severity=sev,
                     line_number=min(line_a, line_b),
+                    source_agent="code_analysis",
                     description=(
                         f"Functions '{name_a}' (line {line_a}) and '{name_b}' "
                         f"(line {line_b}) share an identical AST structure "

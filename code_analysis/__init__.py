@@ -10,7 +10,7 @@ Public API
 >>> findings = agent.analyze(source_code, language="python")
 """
 
-from .models import Finding, Severity, SmellType
+from shared.models import Finding, Severity, SmellType
 from .agent import CodeAnalysisAgent
 
 __all__ = ["CodeAnalysisAgent", "Finding", "Severity", "SmellType"]

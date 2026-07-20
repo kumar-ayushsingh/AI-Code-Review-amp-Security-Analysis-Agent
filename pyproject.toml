@@ -16,3 +16,7 @@ code-analysis = "code_analysis.cli:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["code_analysis*", "shared*", "security_vulnerability*"]

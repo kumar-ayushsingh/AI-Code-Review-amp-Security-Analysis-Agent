@@ -6,7 +6,8 @@ Run with:  python -m pytest tests/ -v
 """
 
 import pytest
-from code_analysis import CodeAnalysisAgent, Finding, Severity, SmellType
+from code_analysis import CodeAnalysisAgent
+from shared.models import Finding, Severity, SmellType
 
 
 # ─────────────────────────────────────────────────────────────────────────────

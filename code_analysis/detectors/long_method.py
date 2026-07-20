@@ -39,7 +39,7 @@ import ast
 import re
 from typing import List
 
-from ..models import Finding, Severity, SmellType
+from shared.models import Finding, Severity, SmellType
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -154,7 +154,8 @@ def _detect_python(lines: List[str], threshold: int) -> List[Finding]:
                 severity=sev,
                 line_number=node.lineno,
                 symbol=node.name,
-                description=(
+                source_agent="code_analysis",
+                    description=(
                     f"Function '{node.name}' contains {stmt_count} statements "
                     f"(threshold: {threshold}) across {line_span} lines. "
                     f"Max control-flow nesting depth: {max_depth}. "
@@ -241,7 +242,8 @@ def _detect_java(lines: List[str], threshold: int) -> List[Finding]:
                 severity=sev,
                 line_number=start_line,
                 symbol=method_name,
-                description=(
+                source_agent="code_analysis",
+                    description=(
                     f"Method '{method_name}' spans {length} lines "
                     f"(threshold: {threshold}). Consider extracting "
                     f"cohesive sub-tasks into smaller helper methods."

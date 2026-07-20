@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 from typing import Dict, List, Literal, Optional
 
-from .models import Finding, Severity, SmellType
+from shared.models import Finding, Severity, SmellType
 from .detectors import (
     long_method,
     duplicate_code,
