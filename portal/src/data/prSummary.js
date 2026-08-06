@@ -157,13 +157,12 @@ def send_reset_email(user):   _send_email(user, 'Reset',   reset_body)`,
   ],
 };
 
-// Health score calculation (weighted penalty per severity)
 export function computeHealthScore(breakdown) {
   const penalties = {
-    critical: 25,
-    high: 15,
-    medium: 8,
-    low: 3,
+    critical: 15,
+    high: 8,
+    medium: 3,
+    low: 1,
   };
   const deduction =
     (breakdown.critical || 0) * penalties.critical +

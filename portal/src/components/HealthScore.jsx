@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./HealthScore.module.css";
 
-const SEVERITY_WEIGHTS = { critical: 25, high: 15, medium: 8, low: 3 };
+const SEVERITY_WEIGHTS = { critical: 15, high: 8, medium: 3, low: 1 };
 
 function getScoreColor(score) {
   if (score >= 80) return "#4ade80";
