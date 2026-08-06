@@ -42,6 +42,34 @@ class VulnerabilityType(str, Enum):
 
 
 @dataclass
+class Remediation:
+    """
+    Auto-generated remediation advice attached to a Finding.
+
+    Attributes
+    ----------
+    corrected_code : str
+        A self-contained illustrative code snippet showing the fixed pattern.
+    explanation : str
+        Plain-language description of why the fix eliminates the issue.
+    principle : str
+        The named secure-coding or clean-code principle being applied
+        (e.g. "OWASP A03:2021 – Injection", "Single Responsibility Principle").
+    """
+
+    corrected_code: str
+    explanation: str
+    principle: str
+
+    def to_dict(self) -> dict:
+        return {
+            "corrected_code": self.corrected_code,
+            "explanation": self.explanation,
+            "principle": self.principle,
+        }
+
+
+@dataclass
 class Finding:
     """
     A single finding produced by an analysis agent.
@@ -71,6 +99,7 @@ class Finding:
     source_agent: str
     symbol: Optional[str] = None
     extra: dict = field(default_factory=dict)
+    remediation: Optional[Remediation] = None
 
     # ------------------------------------------------------------------ #
     # Serialisation helpers                                                #
@@ -86,6 +115,7 @@ class Finding:
             "source_agent": self.source_agent,
             "symbol": self.symbol,
             "extra": self.extra,
+            "remediation": self.remediation.to_dict() if self.remediation else None,
         }
 
     def __str__(self) -> str:  # pragma: no cover

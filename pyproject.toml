@@ -19,4 +19,4 @@ testpaths = ["tests"]
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["code_analysis*", "shared*", "security_vulnerability*", "orchestration*"]
+include = ["code_analysis*", "shared*", "security_vulnerability*", "orchestration*", "remediation*"]
