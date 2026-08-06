@@ -126,3 +126,128 @@ class Finding:
             f"[{self.severity.value.upper()}] {type_str}{sym} @ {loc}: "
             f"{self.description}"
         )
+
+
+# ═══════════════════════════════════════════════════════════════════════════ #
+# PR Summary data model                                                       #
+# ═══════════════════════════════════════════════════════════════════════════ #
+
+@dataclass
+class FindingSummary:
+    """
+    A compact, human-readable digest of a single Finding for use inside a
+    PRSummary.  All fields are plain strings so the object is trivially
+    JSON-serialisable.
+
+    Attributes
+    ----------
+    rank : int
+        1-based position in the prioritised fix list (1 = most urgent).
+    severity : str
+        Severity label ("critical" | "high" | "medium" | "low").
+    finding_type : str
+        The finding type value (e.g. "sql_injection", "poor_naming").
+    line_number : int
+        Source line where the issue begins.
+    source_agent : str
+        Which agent raised this finding.
+    one_liner : str
+        One sentence describing the problem.
+    fix_action : str
+        One sentence describing the concrete fix action.
+    principle : str
+        Secure-coding / clean-code principle, if a remediation is attached.
+    """
+
+    rank: int
+    severity: str
+    finding_type: str
+    line_number: int
+    source_agent: str
+    one_liner: str
+    fix_action: str
+    principle: str = ""
+
+    def to_dict(self) -> dict:
+        return {
+            "rank": self.rank,
+            "severity": self.severity,
+            "finding_type": self.finding_type,
+            "line_number": self.line_number,
+            "source_agent": self.source_agent,
+            "one_liner": self.one_liner,
+            "fix_action": self.fix_action,
+            "principle": self.principle,
+        }
+
+
+@dataclass
+class SeverityBreakdown:
+    """
+    Count of findings at each severity level.
+
+    Attributes
+    ----------
+    critical / high / medium / low : int
+        Counts per bucket.
+    total : int
+        Sum of all findings.
+    """
+
+    critical: int = 0
+    high: int     = 0
+    medium: int   = 0
+    low: int      = 0
+
+    @property
+    def total(self) -> int:
+        return self.critical + self.high + self.medium + self.low
+
+    def to_dict(self) -> dict:
+        return {
+            "critical": self.critical,
+            "high": self.high,
+            "medium": self.medium,
+            "low": self.low,
+            "total": self.total,
+        }
+
+
+@dataclass
+class PRSummary:
+    """
+    A structured pull-request-style review summary produced by PRSummaryAgent.
+
+    Attributes
+    ----------
+    executive_overview : str
+        1-2 sentence health assessment of the submitted code.
+    severity_breakdown : SeverityBreakdown
+        Counts of findings by severity level.
+    prioritized_fixes : list[FindingSummary]
+        All findings ordered by severity (critical first), then line number.
+        Each entry includes a 1-based rank, one-liner, and fix action.
+    agent_contributions : dict[str, int]
+        Maps source_agent → number of findings it raised.
+    has_critical : bool
+        True if any CRITICAL finding exists (convenience flag for CI gates).
+    has_blocking : bool
+        True if any CRITICAL or HIGH finding exists.
+    """
+
+    executive_overview: str
+    severity_breakdown: SeverityBreakdown
+    prioritized_fixes: list  # list[FindingSummary]
+    agent_contributions: dict
+    has_critical: bool
+    has_blocking: bool
+
+    def to_dict(self) -> dict:
+        return {
+            "executive_overview": self.executive_overview,
+            "severity_breakdown": self.severity_breakdown.to_dict(),
+            "prioritized_fixes": [f.to_dict() for f in self.prioritized_fixes],
+            "agent_contributions": self.agent_contributions,
+            "has_critical": self.has_critical,
+            "has_blocking": self.has_blocking,
+        }
