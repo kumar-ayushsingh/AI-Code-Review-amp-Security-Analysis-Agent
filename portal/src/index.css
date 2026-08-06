@@ -1,0 +1,90 @@
+/* ===========================
+   CodeGuard Portal – Global CSS
+   =========================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg-base:        #0a0d14;
+  --bg-surface:     #111520;
+  --bg-card:        #161b2e;
+  --bg-card-hover:  #1c2340;
+  --bg-elevated:    #1e2540;
+
+  --border:         rgba(255,255,255,0.07);
+  --border-bright:  rgba(255,255,255,0.14);
+
+  --text-primary:   #e8eaf0;
+  --text-secondary: #8b92a8;
+  --text-muted:     #5a6070;
+  --text-code:      #cdd6f4;
+
+  --purple-400: #a78bfa;
+  --purple-500: #8b5cf6;
+  --purple-600: #7c3aed;
+
+  --red-400:    #f87171;
+  --red-500:    #ef4444;
+  --red-glow:   rgba(239,68,68,0.15);
+
+  --orange-400: #fb923c;
+  --orange-500: #f97316;
+  --orange-glow:rgba(249,115,22,0.15);
+
+  --yellow-400: #fbbf24;
+  --yellow-500: #f59e0b;
+  --yellow-glow:rgba(245,158,11,0.12);
+
+  --blue-400:   #60a5fa;
+  --blue-500:   #3b82f6;
+  --blue-glow:  rgba(59,130,246,0.12);
+
+  --green-400:  #4ade80;
+  --green-500:  #22c55e;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-glow: 0 0 40px rgba(139,92,246,0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--purple-600); }
+
+/* Utility */
+.glass {
+  background: rgba(22, 27, 46, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+}
+
+code, pre {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.82rem;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); border: 0;
+}
