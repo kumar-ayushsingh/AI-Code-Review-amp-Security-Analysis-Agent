@@ -59,13 +59,45 @@ function Explanation({ text }) {
 }
 
 export default function FindingCard({ finding }) {
-  const [open, setOpen] = useState(true); // Default open to feel like a PR comment
+  const [open, setOpen] = useState(true);
+  const [chatInput, setChatInput] = useState("");
+  const [chatHistory, setChatHistory] = useState([]);
+  const [isChatLoading, setIsChatLoading] = useState(false);
+
   const sev = SEV_CONFIG[finding.severity] || SEV_CONFIG.low;
   const rem = finding.remediation;
-  const agentName = AGENT_LABEL[finding.source_agent] || finding.source_agent;
+  const language = "python";
 
-  // Determine language for syntax highlighting based on file context or general heuristics
-  const language = "python"; // Assuming Python for the demo, you can make this dynamic
+  const handleChatSubmit = async (e) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+
+    const userMessage = chatInput.trim();
+    setChatInput("");
+    setChatHistory(prev => [...prev, { role: "user", text: userMessage }]);
+    setIsChatLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:8000/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: userMessage,
+          finding_context: finding
+        })
+      });
+
+      if (!response.ok) throw new Error("Network response was not ok");
+      
+      const data = await response.json();
+      setChatHistory(prev => [...prev, { role: "bot", text: data.response }]);
+    } catch (error) {
+      console.error("Chat error:", error);
+      setChatHistory(prev => [...prev, { role: "bot", text: "Sorry, I couldn't reach the chat server. Is it running on port 8000?" }]);
+    } finally {
+      setIsChatLoading(false);
+    }
+  };
 
   return (
     <div className={styles.threadContainer}>
@@ -126,6 +158,53 @@ export default function FindingCard({ finding }) {
                 </div>
               </>
             )}
+            
+            {/* Chat Assistant Panel */}
+            <div className={styles.chatPanel}>
+              <div className={styles.chatHeader}>
+                <BotIcon /> Ask CodeGuard Assistant
+              </div>
+              
+              <div className={styles.chatHistory}>
+                {chatHistory.map((msg, i) => (
+                  <div key={i} className={`${styles.chatMsg} ${msg.role === 'user' ? styles.chatMsgUser : styles.chatMsgBot}`}>
+                    {msg.role === 'bot' && <div className={styles.botAvatar}>🤖</div>}
+                    <div className={styles.chatBubble}>
+                      {msg.role === 'bot' ? (
+                        <div className={styles.markdownBody}>
+                          <Explanation text={msg.text} />
+                        </div>
+                      ) : (
+                        msg.text
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {isChatLoading && (
+                  <div className={`${styles.chatMsg} ${styles.chatMsgBot}`}>
+                    <div className={styles.botAvatar}>🤖</div>
+                    <div className={styles.chatBubble}>
+                      <span className={styles.typingIndicator}>...</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <form onSubmit={handleChatSubmit} className={styles.chatForm}>
+                <input
+                  type="text"
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  placeholder="e.g. Why is this a problem? or How do I fix it?"
+                  className={styles.chatInput}
+                  disabled={isChatLoading}
+                />
+                <button type="submit" className={styles.chatSubmit} disabled={isChatLoading || !chatInput.trim()}>
+                  Send
+                </button>
+              </form>
+            </div>
+            
           </div>
         )}
       </div>
