@@ -7,6 +7,7 @@ Unit tests for the RemediationAgent.
 import pytest
 from shared.models import Finding, Remediation, Severity, SmellType, VulnerabilityType
 from remediation import RemediationAgent
+from security_vulnerability.rag_client import retrieve_context
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -60,6 +61,13 @@ class TestSmellTypeRemediation:
         assert len(f.remediation.explanation.strip()) > 0
 
     @pytest.mark.parametrize("smell", list(SmellType))
+    def test_smell_explanation_contains_rag_guideline(self, agent, smell):
+        """Every explanation must start with the RAG-retrieved guideline header."""
+        f = make_finding(smell)
+        agent.remediate([f])
+        assert "[RAG Guideline]" in f.remediation.explanation
+
+    @pytest.mark.parametrize("smell", list(SmellType))
     def test_smell_principle_non_empty(self, agent, smell):
         f = make_finding(smell)
         agent.remediate([f])
@@ -88,10 +96,91 @@ class TestVulnerabilityTypeRemediation:
         assert len(f.remediation.explanation.strip()) > 0
 
     @pytest.mark.parametrize("vuln", list(VulnerabilityType))
+    def test_vuln_explanation_contains_rag_guideline(self, agent, vuln):
+        """Every explanation must carry the RAG-retrieved guideline header."""
+        f = make_finding(vuln)
+        agent.remediate([f])
+        assert "[RAG Guideline]" in f.remediation.explanation
+
+    @pytest.mark.parametrize("vuln", list(VulnerabilityType))
     def test_vuln_principle_non_empty(self, agent, vuln):
         f = make_finding(vuln)
         agent.remediate([f])
         assert len(f.remediation.principle.strip()) > 0
+
+
+# ── RAG grounding content checks ─────────────────────────────────────────────
+
+class TestRAGGrounding:
+    def test_sql_injection_rag_references_sec01(self, agent):
+        f = make_finding(VulnerabilityType.SQL_INJECTION)
+        agent.remediate([f])
+        assert "SEC-01" in f.remediation.explanation
+
+    def test_xss_rag_references_sec02(self, agent):
+        f = make_finding(VulnerabilityType.XSS)
+        agent.remediate([f])
+        assert "SEC-02" in f.remediation.explanation
+
+    def test_csrf_rag_references_sec03(self, agent):
+        f = make_finding(VulnerabilityType.CSRF)
+        agent.remediate([f])
+        assert "SEC-03" in f.remediation.explanation
+
+    def test_hardcoded_secret_rag_references_sec04(self, agent):
+        f = make_finding(VulnerabilityType.HARDCODED_SECRET)
+        agent.remediate([f])
+        assert "SEC-04" in f.remediation.explanation
+
+    def test_insecure_auth_rag_references_sec05(self, agent):
+        f = make_finding(VulnerabilityType.INSECURE_AUTH)
+        agent.remediate([f])
+        assert "SEC-05" in f.remediation.explanation
+
+    def test_broken_access_control_rag_references_sec06(self, agent):
+        f = make_finding(VulnerabilityType.BROKEN_ACCESS_CONTROL)
+        agent.remediate([f])
+        assert "SEC-06" in f.remediation.explanation
+
+    def test_long_method_rag_references_cc01(self, agent):
+        f = make_finding(SmellType.LONG_METHOD)
+        agent.remediate([f])
+        assert "CC-01" in f.remediation.explanation
+
+    def test_duplicate_code_rag_references_cc02(self, agent):
+        f = make_finding(SmellType.DUPLICATE_CODE)
+        agent.remediate([f])
+        assert "CC-02" in f.remediation.explanation
+
+    def test_poor_naming_rag_references_cc03(self, agent):
+        f = make_finding(SmellType.POOR_NAMING)
+        agent.remediate([f])
+        assert "CC-03" in f.remediation.explanation
+
+    def test_high_complexity_rag_references_cc04(self, agent):
+        f = make_finding(SmellType.HIGH_COMPLEXITY)
+        agent.remediate([f])
+        assert "CC-04" in f.remediation.explanation
+
+    def test_tight_coupling_rag_references_cc05(self, agent):
+        f = make_finding(SmellType.TIGHT_COUPLING)
+        agent.remediate([f])
+        assert "CC-05" in f.remediation.explanation
+
+    def test_rag_guideline_and_base_explanation_both_present(self, agent):
+        """Explanation must have both the RAG header block AND the rule explanation."""
+        f = make_finding(VulnerabilityType.SQL_INJECTION)
+        agent.remediate([f])
+        lines = f.remediation.explanation
+        assert "[RAG Guideline]" in lines       # grounding header
+        assert "Parameterized queries" in lines  # base rule explanation
+
+    def test_retrieve_context_called_for_all_types(self, agent):
+        """Smoke-test: every known finding type gets a non-empty guideline."""
+        all_types = list(SmellType) + list(VulnerabilityType)
+        for ftype in all_types:
+            result = retrieve_context(ftype.value.replace("_", " "))
+            assert len(result) > 20, f"Suspiciously short guideline for {ftype}"
 
 
 # ── Specific rule content checks ──────────────────────────────────────────────
