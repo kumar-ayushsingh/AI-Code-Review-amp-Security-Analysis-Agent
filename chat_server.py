@@ -45,6 +45,7 @@ class ChatRequestHandler(BaseHTTPRequestHandler):
             message = payload.get("message", "")
             finding_context = payload.get("finding_context", {})
             finding_type = finding_context.get("finding_type", "unknown")
+            chat_history = payload.get("chat_history", [])
             
             # 1. Retrieve grounded context
             rag_context = retrieve_context(finding_type)
@@ -53,7 +54,8 @@ class ChatRequestHandler(BaseHTTPRequestHandler):
             bot_response = generate_chat_response(
                 message=message,
                 finding=finding_context,
-                rag_context=rag_context
+                rag_context=rag_context,
+                chat_history=chat_history
             )
             
             # Build JSON response

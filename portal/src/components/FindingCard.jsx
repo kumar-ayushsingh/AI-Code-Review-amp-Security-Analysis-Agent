@@ -83,7 +83,8 @@ export default function FindingCard({ finding }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: userMessage,
-          finding_context: finding
+          finding_context: finding,
+          chat_history: chatHistory
         })
       });
 
