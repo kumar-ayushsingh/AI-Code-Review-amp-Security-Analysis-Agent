@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: ai-code-review-chat-api
+    runtime: python
+    buildCommand: pip install -e .
+    startCommand: python chat_server.py
+    envVars:
+      - key: PORT
+        value: 8000
+    healthCheckPath: /

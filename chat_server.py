@@ -7,6 +7,7 @@ Zero external framework dependencies.
 
 import json
 import logging
+import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 
@@ -16,11 +17,22 @@ from security_vulnerability.llm_client import generate_chat_response
 logger = logging.getLogger(__name__)
 
 class ChatRequestHandler(BaseHTTPRequestHandler):
+    def log_message(self, format, *args):  # suppress default verbose logging
+        pass
+
+    def do_GET(self):
+        # Health-check endpoint for Render
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+        self.wfile.write(b'{"status": "ok"}')
+
     def do_OPTIONS(self):
         # Handle CORS preflight requests
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.end_headers()
 
@@ -75,7 +87,9 @@ class ChatRequestHandler(BaseHTTPRequestHandler):
         else:
             self.send_error(404, "Not Found")
 
-def run_server(port=8000):
+def run_server(port=None):
+    if port is None:
+        port = int(os.environ.get('PORT', 8000))
     server_address = ('', port)
     httpd = HTTPServer(server_address, ChatRequestHandler)
     print(f"Starting chat server on port {port}...")

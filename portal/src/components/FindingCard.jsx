@@ -78,7 +78,8 @@ export default function FindingCard({ finding }) {
     setIsChatLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/chat", {
+      const apiBase = import.meta.env.VITE_CHAT_API_URL || "http://localhost:8000";
+      const response = await fetch(`${apiBase}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
