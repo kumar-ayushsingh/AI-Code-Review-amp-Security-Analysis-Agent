@@ -13,6 +13,14 @@ from urllib.parse import urlparse
 
 from security_vulnerability.rag_client import retrieve_context
 from security_vulnerability.llm_client import generate_chat_response
+from orchestration.pipeline import UnifiedOrchestrator
+from remediation.agent import RemediationAgent
+from pr_summary.agent import PRSummaryAgent
+
+# Initialize agents once globally for performance
+orchestrator = UnifiedOrchestrator()
+remediator = RemediationAgent()
+summarizer = PRSummaryAgent()
 
 logger = logging.getLogger(__name__)
 
@@ -84,6 +92,46 @@ class ChatRequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             
             self.wfile.write(response_json)
+            
+        elif parsed_path.path == '/api/analyze':
+            content_length = int(self.headers.get('Content-Length', 0))
+            if content_length == 0:
+                self.send_error(400, "Empty request body")
+                return
+                
+            post_data = self.rfile.read(content_length).decode('utf-8')
+            
+            try:
+                payload = json.loads(post_data)
+            except json.JSONDecodeError:
+                self.send_error(400, "Invalid JSON payload")
+                return
+
+            code = payload.get("code", "")
+            language = payload.get("language", "python").lower()
+            filename = payload.get("filename", "uploaded_file")
+            
+            if not code.strip():
+                self.send_error(400, "Code is empty")
+                return
+                
+            try:
+                findings = orchestrator.analyze_concurrently(code, language, filename=filename)
+                remediated = remediator.remediate(findings)
+                summary = summarizer.summarize(remediated, filename=filename)
+                
+                response_json = json.dumps(summary.to_dict()).encode('utf-8')
+                
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.send_header('Content-Length', str(len(response_json)))
+                self.end_headers()
+                
+                self.wfile.write(response_json)
+            except Exception as e:
+                logger.error(f"Analysis failed: {e}", exc_info=True)
+                self.send_error(500, f"Analysis failed: {str(e)}")
         else:
             self.send_error(404, "Not Found")
 

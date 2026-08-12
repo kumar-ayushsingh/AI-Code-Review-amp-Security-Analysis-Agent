@@ -4,7 +4,7 @@ import styles from "./App.module.css";
 import HealthScore from "./components/HealthScore";
 import SeverityBadges from "./components/SeverityBadges";
 import FindingCard from "./components/FindingCard";
-import { PR_SUMMARY } from "./data/prSummary";
+import CodeInput from "./components/CodeInput";
 
 const FILTER_OPTIONS = ["all", "critical", "high", "medium", "low"];
 
@@ -54,7 +54,78 @@ function AgentPill({ name, count }) {
 
 export default function App() {
   const [filter, setFilter] = useState("all");
-  const summary = PR_SUMMARY;
+  const [summary, setSummary] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleAnalyze = async (code, language, filename) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const apiBase = import.meta.env.VITE_CHAT_API_URL || "http://localhost:8000";
+      const res = await fetch(`${apiBase}/api/analyze`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, language, filename }),
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Analysis failed: ${res.status} ${text}`);
+      }
+      const data = await res.json();
+      setSummary(data);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const resetAnalysis = () => {
+    setSummary(null);
+    setError(null);
+    setFilter("all");
+  };
+
+  // If no summary yet, show the input view (or loading/error states)
+  if (!summary) {
+    return (
+      <div className={styles.app}>
+        <nav className={styles.nav}>
+          <div className={styles.navInner}>
+            <div className={styles.logo}>
+              <ShieldIcon />
+              <span>CodeGuard</span>
+            </div>
+            <div className={styles.navRight}>
+              <span className={styles.navTag}>Developer Portal</span>
+            </div>
+          </div>
+        </nav>
+        <main className={styles.main}>
+          {isLoading ? (
+            <div style={{ textAlign: "center", marginTop: "100px", color: "var(--text-muted)" }}>
+              <div className="spinner" style={{ marginBottom: "20px" }}></div>
+              <h2>Analyzing Code...</h2>
+              <p>Our AI agents are reviewing your code for quality smells and security vulnerabilities.</p>
+            </div>
+          ) : (
+            <>
+              {error && (
+                <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px", backgroundColor: "rgba(248,113,113,0.1)", border: "1px solid #f87171", borderRadius: "8px", color: "#f87171" }}>
+                  <strong>Error:</strong> {error}
+                </div>
+              )}
+              <CodeInput onAnalyze={handleAnalyze} />
+            </>
+          )}
+        </main>
+      </div>
+    );
+  }
+
+  // Dashboard View
   const bd = summary.severity_breakdown;
 
   const filtered = summary.prioritized_fixes.filter(
@@ -73,6 +144,7 @@ export default function App() {
             <span>CodeGuard</span>
           </div>
           <div className={styles.navRight}>
+            <button onClick={resetAnalysis} style={{ background: "transparent", border: "1px solid var(--border-color)", color: "var(--text-color)", padding: "4px 12px", borderRadius: "4px", cursor: "pointer", marginRight: "16px" }}>New Analysis</button>
             <span className={styles.navTag}>Developer Portal</span>
           </div>
         </div>
