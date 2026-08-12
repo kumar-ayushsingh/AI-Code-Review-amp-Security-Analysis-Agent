@@ -99,7 +99,7 @@ export default function App() {
               <span>CodeGuard</span>
             </div>
             <div className={styles.navRight}>
-              <span className={styles.navTag}>Developer Portal</span>
+              {/* Developer Portal tag removed */}
             </div>
           </div>
         </nav>
@@ -145,7 +145,7 @@ export default function App() {
           </div>
           <div className={styles.navRight}>
             <button onClick={resetAnalysis} style={{ background: "transparent", border: "1px solid var(--border-color)", color: "var(--text-color)", padding: "4px 12px", borderRadius: "4px", cursor: "pointer", marginRight: "16px" }}>New Analysis</button>
-            <span className={styles.navTag}>Developer Portal</span>
+            {/* Developer Portal tag removed */}
           </div>
         </div>
       </nav>
