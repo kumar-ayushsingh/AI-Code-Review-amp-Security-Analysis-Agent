@@ -3,7 +3,7 @@
    Condesa Fluid Theme
    =========================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Syne:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
   /* Color Palette based on Condesa #colors:a=209,53,71;da=204,79,38;la=240,11,93 */
@@ -44,8 +44,8 @@
   --green-500:  #2b8a3e;
 
   /* Typography */
-  --font-heading: 'Syne', sans-serif;
-  --font-body: 'Outfit', sans-serif;
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
   --font-code: 'JetBrains Mono', 'Fira Code', monospace;
 
   /* Spacing */
@@ -75,7 +75,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   font-weight: 700;
 }
 

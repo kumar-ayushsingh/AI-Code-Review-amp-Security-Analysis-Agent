@@ -33,7 +33,6 @@
   font-weight: 800;
   color: var(--badge-color);
   line-height: 1;
-  letter-spacing: -0.05em;
 }
 
 .row {
