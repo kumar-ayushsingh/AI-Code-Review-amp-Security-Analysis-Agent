@@ -56,6 +56,7 @@ export default function App() {
   const [filter, setFilter] = useState("all");
   const [summary, setSummary] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const [error, setError] = useState(null);
 
   const handleAnalyze = async (code, language, filename) => {
@@ -86,6 +87,36 @@ export default function App() {
     setSummary(null);
     setError(null);
     setFilter("all");
+  };
+
+  const handleExportPDF = async () => {
+    if (!summary) return;
+    setIsExporting(true);
+    try {
+      const apiBase = import.meta.env.VITE_CHAT_API_URL || "http://localhost:8000";
+      const res = await fetch(`${apiBase}/api/export-pdf`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(summary),
+      });
+      if (!res.ok) {
+        throw new Error("Failed to generate PDF");
+      }
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "CodeGuard_Report.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error(err);
+      alert("Could not export PDF: " + err.message);
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   // If no summary yet, show the input view (or loading/error states)
@@ -144,8 +175,10 @@ export default function App() {
             <span>CodeGuard</span>
           </div>
           <div className={styles.navRight}>
-            <button onClick={resetAnalysis} style={{ background: "transparent", border: "1px solid var(--border-color)", color: "var(--text-color)", padding: "4px 12px", borderRadius: "4px", cursor: "pointer", marginRight: "16px" }}>New Analysis</button>
-            {/* Developer Portal tag removed */}
+            <button onClick={handleExportPDF} disabled={isExporting} style={{ background: "var(--accent-dark)", border: "none", color: "white", padding: "6px 16px", borderRadius: "20px", cursor: isExporting ? "not-allowed" : "pointer", fontWeight: "600", opacity: isExporting ? 0.7 : 1, transition: "opacity 0.2s" }}>
+              {isExporting ? "Generating..." : "Export PDF"}
+            </button>
+            <button onClick={resetAnalysis} style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--text-primary)", padding: "6px 16px", borderRadius: "20px", cursor: "pointer" }}>New Analysis</button>
           </div>
         </div>
       </nav>

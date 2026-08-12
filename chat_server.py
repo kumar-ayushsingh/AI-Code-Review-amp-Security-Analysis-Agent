@@ -16,6 +16,7 @@ from security_vulnerability.llm_client import generate_chat_response
 from orchestration.pipeline import UnifiedOrchestrator
 from remediation.agent import RemediationAgent
 from pr_summary.agent import PRSummaryAgent
+from report_generation.generator import generate_pdf_report
 
 # Initialize agents once globally for performance
 orchestrator = UnifiedOrchestrator()
@@ -132,6 +133,35 @@ class ChatRequestHandler(BaseHTTPRequestHandler):
             except Exception as e:
                 logger.error(f"Analysis failed: {e}", exc_info=True)
                 self.send_error(500, f"Analysis failed: {str(e)}")
+                
+        elif parsed_path.path == '/api/export-pdf':
+            content_length = int(self.headers.get('Content-Length', 0))
+            if content_length == 0:
+                self.send_error(400, "Empty request body")
+                return
+                
+            post_data = self.rfile.read(content_length).decode('utf-8')
+            
+            try:
+                summary_payload = json.loads(post_data)
+            except json.JSONDecodeError:
+                self.send_error(400, "Invalid JSON payload")
+                return
+                
+            try:
+                pdf_bytes = generate_pdf_report(summary_payload)
+                
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/pdf')
+                self.send_header('Content-Disposition', 'attachment; filename="CodeGuard_Report.pdf"')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.send_header('Content-Length', str(len(pdf_bytes)))
+                self.end_headers()
+                
+                self.wfile.write(pdf_bytes)
+            except Exception as e:
+                logger.error(f"PDF generation failed: {e}", exc_info=True)
+                self.send_error(500, f"PDF generation failed: {str(e)}")
         else:
             self.send_error(404, "Not Found")
 
