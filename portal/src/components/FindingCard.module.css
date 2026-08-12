@@ -1,16 +1,16 @@
-/* GitHub PR style comment thread */
+/* Condesa Style Finding Card Thread */
 .threadContainer {
   position: relative;
   display: flex;
-  margin-bottom: 16px;
-  padding-left: 24px;
+  margin-bottom: 24px;
+  padding-left: 32px;
 }
 
 .threadLine {
   position: absolute;
-  top: 36px;
-  bottom: -24px;
-  left: 11px;
+  top: 40px;
+  bottom: -32px;
+  left: 15px;
   width: 2px;
   background-color: var(--border);
   z-index: 0;
@@ -22,12 +22,18 @@
 
 .commentBox {
   flex: 1;
-  background: var(--bg-card);
+  background: var(--bg-surface);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
   overflow: hidden;
   z-index: 1;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.commentBox:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.06);
 }
 
 /* Header */
@@ -35,8 +41,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
-  background-color: var(--bg-surface);
+  padding: 16px 20px;
+  background-color: var(--bg-base);
   border-bottom: 1px solid var(--border);
   cursor: pointer;
   user-select: none;
@@ -45,12 +51,12 @@
 .headerLeft {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.85rem;
+  gap: 12px;
+  font-size: 0.95rem;
 }
 
 .botIcon {
-  color: var(--purple-400);
+  color: var(--accent-dark);
 }
 
 .authorName {
@@ -63,32 +69,34 @@
 }
 
 .lineRef {
-  font-family: 'JetBrains Mono', monospace;
-  background: rgba(255,255,255,0.06);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.75rem;
+  font-family: var(--font-code);
+  background: rgba(0,0,0,0.04);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
   color: var(--text-secondary);
 }
 
 .headerRight {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .sevBadge {
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 12px;
+  padding: 4px 12px;
+  border-radius: 20px;
   border: 1px solid;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .findingType {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
 }
 
 .chevronWrap {
@@ -99,38 +107,38 @@
 
 /* Body */
 .body {
-  padding: 16px;
-  font-size: 0.9rem;
+  padding: 24px;
+  font-size: 1rem;
   color: var(--text-primary);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .issueText, .fixActionText, .principleText {
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .issueText strong, .fixActionText strong, .principleText strong {
   color: var(--text-primary);
-  margin-right: 4px;
+  margin-right: 8px;
 }
 
-.issueText { color: var(--red-400); }
-.fixActionText { color: var(--green-400); }
-.principleText { color: var(--purple-400); font-size: 0.85rem; }
+.issueText { color: var(--red-500); }
+.fixActionText { color: var(--green-500); }
+.principleText { color: var(--accent-dark); font-size: 0.95rem; }
 
 /* RAG Guideline */
 .explanation {
-  margin-top: 8px;
-  padding: 12px;
-  background: rgba(255,255,255,0.03);
-  border-left: 3px solid var(--purple-500);
-  border-radius: 0 4px 4px 0;
+  margin-top: 12px;
+  padding: 16px;
+  background: var(--bg-base);
+  border-left: 4px solid var(--accent-dark);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 
 .ragBox {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--text-secondary);
   margin-bottom: 8px;
 }
@@ -140,64 +148,65 @@
 }
 
 .baseText {
-  font-size: 0.9rem;
-  line-height: 1.6;
+  font-size: 0.95rem;
+  line-height: 1.7;
   color: var(--text-primary);
 }
 
 /* Syntax Highlighted Code Block */
 .codeBlockContainer {
-  margin-top: 16px;
+  margin-top: 20px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   overflow: hidden;
-  background-color: #1e1e1e; /* matches vscDarkPlus */
+  background-color: #f8f9fa;
 }
 
 .codeBlockHeader {
-  background-color: #2d2d2d;
-  color: #ccc;
-  padding: 6px 12px;
-  font-size: 0.75rem;
-  font-family: 'JetBrains Mono', monospace;
-  border-bottom: 1px solid #444;
+  background-color: #e9ecef;
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  font-family: var(--font-code);
+  border-bottom: 1px solid var(--border);
 }
 
 /* Chat Assistant Panel */
 .chatPanel {
-  margin-top: 24px;
+  margin-top: 32px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background-color: var(--bg-surface);
   overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
 }
 
 .chatHeader {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  background-color: rgba(139,92,246,0.1);
+  gap: 12px;
+  padding: 12px 20px;
+  background-color: rgba(20, 91, 175, 0.05);
   border-bottom: 1px solid var(--border);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: var(--purple-400);
+  color: var(--accent-dark);
 }
 
 .chatHistory {
-  max-height: 300px;
+  max-height: 400px;
   overflow-y: auto;
-  padding: 16px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .chatMsg {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   align-items: flex-end;
-  max-width: 90%;
+  max-width: 85%;
 }
 
 .chatMsgUser {
@@ -209,25 +218,25 @@
 }
 
 .botAvatar {
-  font-size: 1.2rem;
-  margin-bottom: 2px;
+  font-size: 1.4rem;
+  margin-bottom: 4px;
 }
 
 .chatBubble {
-  padding: 10px 14px;
-  border-radius: 14px;
-  font-size: 0.85rem;
-  line-height: 1.5;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 .chatMsgUser .chatBubble {
-  background-color: var(--purple-600);
+  background-color: var(--accent-dark);
   color: #fff;
   border-bottom-right-radius: 4px;
 }
 
 .chatMsgBot .chatBubble {
-  background-color: var(--bg-card);
+  background-color: var(--bg-base);
   border: 1px solid var(--border);
   color: var(--text-primary);
   border-bottom-left-radius: 4px;
@@ -236,16 +245,16 @@
 .chatForm {
   display: flex;
   border-top: 1px solid var(--border);
-  background-color: var(--bg-base);
+  background-color: var(--bg-surface);
 }
 
 .chatInput {
   flex: 1;
-  padding: 12px 16px;
+  padding: 16px 20px;
   background: transparent;
   border: none;
   color: var(--text-primary);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   outline: none;
 }
 
@@ -254,17 +263,18 @@
 }
 
 .chatSubmit {
-  padding: 0 16px;
+  padding: 0 24px;
   background: transparent;
   border: none;
-  color: var(--purple-400);
+  color: var(--accent-dark);
   font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
   transition: color 0.2s;
 }
 
 .chatSubmit:hover:not(:disabled) {
-  color: var(--purple-500);
+  color: #0f4b91;
 }
 
 .chatSubmit:disabled {

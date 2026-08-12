@@ -1,55 +1,59 @@
 .container {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 32px;
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 4vw;
+  background-color: var(--bg-card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
 }
 
 .title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0 0 8px 0;
-  color: var(--text-color);
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
 }
 
 .subtitle {
-  color: var(--text-muted);
-  margin-bottom: 24px;
-  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+  font-size: 1.1rem;
+  line-height: 1.6;
 }
 
 .dropzone {
-  border: 2px dashed var(--border-color);
-  border-radius: 8px;
-  padding: 40px 20px;
+  border: 2px dashed rgba(0,0,0,0.15);
+  border-radius: var(--radius-lg);
+  padding: 60px 20px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.2s ease;
-  margin-bottom: 24px;
+  transition: all 0.3s ease;
+  margin-bottom: 32px;
   color: var(--text-muted);
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--bg-base);
 }
 
 .dropzone:hover, .dragging {
-  border-color: #60a5fa;
-  background-color: rgba(96, 165, 250, 0.05);
-  color: #60a5fa;
+  border-color: var(--accent-dark);
+  background-color: rgba(20, 91, 175, 0.04);
+  color: var(--accent-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(20, 91, 175, 0.1);
 }
 
 .uploadIcon {
-  width: 48px;
-  height: 48px;
-  margin-bottom: 12px;
-  opacity: 0.8;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 16px;
+  opacity: 0.7;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
 }
 
 .controls {
@@ -58,14 +62,15 @@
 }
 
 .input, .select {
-  padding: 10px 12px;
-  background-color: #1a1b26; /* Darker editor-like background */
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  color: var(--text-color);
-  font-size: 0.9rem;
+  padding: 14px 16px;
+  background-color: var(--bg-base);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-family: var(--font-body);
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .input {
@@ -73,44 +78,52 @@
 }
 
 .input:focus, .select:focus, .textarea:focus {
-  border-color: #60a5fa;
+  background-color: #ffffff;
+  border-color: var(--accent-dark);
+  box-shadow: 0 0 0 4px rgba(20, 91, 175, 0.1);
 }
 
 .textarea {
   width: 100%;
-  height: 300px;
-  padding: 16px;
-  background-color: #1a1b26;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  color: #a9b1d6;
-  font-family: 'Fira Code', 'Consolas', monospace;
-  font-size: 0.9rem;
-  line-height: 1.5;
+  height: 350px;
+  padding: 20px;
+  background-color: #f8f9fa; /* Slightly off-white for code area */
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-code);
+  font-family: var(--font-code);
+  font-size: 0.95rem;
+  line-height: 1.6;
   resize: vertical;
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .button {
-  background-color: #3b82f6;
+  background-color: var(--accent-dark);
   color: white;
   border: none;
-  border-radius: 6px;
-  padding: 12px 24px;
-  font-size: 1rem;
-  font-weight: 500;
+  border-radius: 30px;
+  padding: 16px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: var(--font-body);
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
   align-self: flex-end;
+  box-shadow: 0 4px 15px rgba(20, 91, 175, 0.3);
 }
 
 .button:hover:not(:disabled) {
-  background-color: #2563eb;
+  background-color: #0f4b91;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(20, 91, 175, 0.4);
 }
 
 .button:disabled {
-  background-color: #4b5563;
-  color: #9ca3af;
+  background-color: #e9ecef;
+  color: #adb5bd;
   cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }

@@ -1,19 +1,20 @@
 .wrapper {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 32px;
 }
 
 .ring {
   position: relative;
-  width: 140px;
-  height: 140px;
+  width: 160px;
+  height: 160px;
   flex-shrink: 0;
 }
 
 .ring svg {
   position: absolute;
   top: 0; left: 0;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.05));
 }
 
 .center {
@@ -26,37 +27,42 @@
 }
 
 .number {
-  font-size: 2.4rem;
+  font-family: var(--font-heading);
+  font-size: 3rem;
   font-weight: 800;
   line-height: 1;
-  letter-spacing: -2px;
+  letter-spacing: -0.05em;
+  color: var(--text-primary);
 }
 
 .outOf {
-  font-size: 0.8rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
   color: var(--text-muted);
   font-weight: 500;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 .meta {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .title {
-  font-size: 1.15rem;
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
   font-weight: 700;
   color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
 .label {
   display: inline-flex;
   align-items: center;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.78rem;
+  padding: 6px 16px;
+  border-radius: 24px;
+  font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.5px;
   width: fit-content;
@@ -64,7 +70,7 @@
 }
 
 .hint {
-  font-size: 0.72rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
 }

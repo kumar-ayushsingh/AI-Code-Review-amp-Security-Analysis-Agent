@@ -105,20 +105,20 @@ export default function App() {
         </nav>
         <main className={styles.main}>
           {isLoading ? (
-            <div style={{ textAlign: "center", marginTop: "100px", color: "var(--text-muted)" }}>
+            <div className="animate-fade-in-up" style={{ textAlign: "center", marginTop: "100px", color: "var(--text-muted)" }}>
               <div className="spinner" style={{ marginBottom: "20px" }}></div>
-              <h2>Analyzing Code...</h2>
+              <h2 style={{ fontFamily: "var(--font-heading)", color: "var(--text-primary)" }}>Analyzing Code...</h2>
               <p>Our AI agents are reviewing your code for quality smells and security vulnerabilities.</p>
             </div>
           ) : (
-            <>
+            <div className="animate-fade-in-up">
               {error && (
-                <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px", backgroundColor: "rgba(248,113,113,0.1)", border: "1px solid #f87171", borderRadius: "8px", color: "#f87171" }}>
+                <div style={{ maxWidth: "900px", margin: "0 auto 24px", padding: "16px", backgroundColor: "rgba(224,49,49,0.1)", border: "1px solid #e03131", borderRadius: "8px", color: "#e03131" }}>
                   <strong>Error:</strong> {error}
                 </div>
               )}
               <CodeInput onAnalyze={handleAnalyze} />
-            </>
+            </div>
           )}
         </main>
       </div>
@@ -152,7 +152,7 @@ export default function App() {
 
       <main className={styles.main}>
         {/* ── Hero card: health score + overview banner ───── */}
-        <div className={styles.heroCard}>
+        <div className={`${styles.heroCard} animate-fade-in-up delay-100`}>
           <div className={styles.heroLeft}>
             <HealthScore breakdown={bd} />
           </div>
@@ -193,13 +193,13 @@ export default function App() {
         </div>
 
         {/* ── Severity breakdown badges ───────────────────── */}
-        <section className={styles.section}>
+        <section className={`${styles.section} animate-fade-in-up delay-200`}>
           <h2 className={styles.sectionHeading}>Severity Breakdown</h2>
           <SeverityBadges breakdown={bd} />
         </section>
 
         {/* ── Findings list ───────────────────────────────── */}
-        <section className={styles.section}>
+        <section className={`${styles.section} animate-fade-in-up delay-300`}>
           <div className={styles.listHeader}>
             <h2 className={styles.sectionHeading}>
               Prioritized Findings
@@ -222,8 +222,10 @@ export default function App() {
             <div className={styles.empty}>No findings at this severity level.</div>
           ) : (
             <div className={styles.findingsList}>
-              {filtered.map((f) => (
-                <FindingCard key={`${f.rank}-${f.finding_type}-${f.line_number}`} finding={f} />
+              {filtered.map((f, i) => (
+                <div key={`${f.rank}-${f.finding_type}-${f.line_number}`} className={`animate-fade-in-up delay-${Math.min(100 + (i * 100), 500)}`}>
+                  <FindingCard finding={f} />
+                </div>
               ))}
             </div>
           )}
