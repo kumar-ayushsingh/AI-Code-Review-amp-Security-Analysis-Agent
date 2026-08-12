@@ -134,7 +134,7 @@ class ChatRequestHandler(BaseHTTPRequestHandler):
                 logger.error(f"Analysis failed: {e}", exc_info=True)
                 self.send_error(500, f"Analysis failed: {str(e)}")
                 
-        elif parsed_path.path == '/api/export-pdf':
+        elif parsed_path.path == '/export-report':
             content_length = int(self.headers.get('Content-Length', 0))
             if content_length == 0:
                 self.send_error(400, "Empty request body")

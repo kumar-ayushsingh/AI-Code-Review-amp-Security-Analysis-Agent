@@ -94,7 +94,7 @@ export default function App() {
     setIsExporting(true);
     try {
       const apiBase = import.meta.env.VITE_CHAT_API_URL || "http://localhost:8000";
-      const res = await fetch(`${apiBase}/api/export-pdf`, {
+      const res = await fetch(`${apiBase}/export-report`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(summary),
@@ -176,7 +176,7 @@ export default function App() {
           </div>
           <div className={styles.navRight}>
             <button onClick={handleExportPDF} disabled={isExporting} style={{ background: "var(--accent-dark)", border: "none", color: "white", padding: "6px 16px", borderRadius: "20px", cursor: isExporting ? "not-allowed" : "pointer", fontWeight: "600", opacity: isExporting ? 0.7 : 1, transition: "opacity 0.2s" }}>
-              {isExporting ? "Generating..." : "Export PDF"}
+              {isExporting ? "Generating..." : "Download Report"}
             </button>
             <button onClick={resetAnalysis} style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--text-primary)", padding: "6px 16px", borderRadius: "20px", cursor: "pointer" }}>New Analysis</button>
           </div>
