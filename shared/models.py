@@ -242,6 +242,40 @@ class PRSummary:
     has_critical: bool
     has_blocking: bool
 
+    # ── Convenience properties ────────────────────────────────────────────
+
+    @property
+    def total_findings(self) -> int:
+        return self.severity_breakdown.total
+
+    @property
+    def critical_count(self) -> int:
+        return self.severity_breakdown.critical
+
+    @property
+    def high_count(self) -> int:
+        return self.severity_breakdown.high
+
+    @property
+    def medium_count(self) -> int:
+        return self.severity_breakdown.medium
+
+    @property
+    def low_count(self) -> int:
+        return self.severity_breakdown.low
+
+    @property
+    def health_score(self) -> int:
+        """0-100 score. Deductions: critical=-15, high=-8, medium=-3, low=-1."""
+        score = (
+            100
+            - 15 * self.severity_breakdown.critical
+            - 8  * self.severity_breakdown.high
+            - 3  * self.severity_breakdown.medium
+            - 1  * self.severity_breakdown.low
+        )
+        return max(0, score)
+
     def to_dict(self) -> dict:
         return {
             "executive_overview": self.executive_overview,
@@ -250,4 +284,6 @@ class PRSummary:
             "agent_contributions": self.agent_contributions,
             "has_critical": self.has_critical,
             "has_blocking": self.has_blocking,
+            "health_score": self.health_score,
+            "total_findings": self.total_findings,
         }
