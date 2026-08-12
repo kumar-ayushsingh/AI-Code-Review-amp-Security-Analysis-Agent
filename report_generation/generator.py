@@ -53,11 +53,11 @@ def generate_pdf_report(summary: dict) -> bytes:
     Story.append(Spacer(1, 12))
     
     # Overview
-    filename = summary.get("filename", "Unknown File")
+    filename = summary.get("filename") or "Unknown File"
     Story.append(Paragraph(f"<b>File Analyzed:</b> {html.escape(filename)}", styles['Normal']))
     Story.append(Spacer(1, 6))
     
-    overview = summary.get("executive_overview", "")
+    overview = summary.get("executive_overview") or ""
     Story.append(Paragraph("<b>Executive Overview:</b>", styles['Heading3']))
     Story.append(Paragraph(html.escape(overview), styles['OverviewText']))
     Story.append(Spacer(1, 12))
@@ -115,13 +115,13 @@ def generate_pdf_report(summary: dict) -> bytes:
         Story.append(Paragraph("No findings found. Excellent work!", styles['Normal']))
     
     for idx, f in enumerate(fixes):
-        ftype = html.escape(f.get('finding_type', 'Unknown'))
-        sev = html.escape(f.get('severity', 'Unknown').upper())
+        ftype = html.escape(f.get('finding_type') or 'Unknown')
+        sev = html.escape((f.get('severity') or 'Unknown').upper())
         line = f.get('line_number', 'N/A')
-        issue = html.escape(f.get('issue_summary', ''))
-        action = html.escape(f.get('remediation_applied', ''))
-        orig = f.get('original_code', '')
-        mod = f.get('modified_code', '')
+        issue = html.escape(f.get('issue_summary') or '')
+        action = html.escape(f.get('remediation_applied') or '')
+        orig = f.get('original_code') or ''
+        mod = f.get('modified_code') or ''
         
         sev_color = "red" if sev == "CRITICAL" else ("darkorange" if sev == "HIGH" else ("goldenrod" if sev == "MEDIUM" else "green"))
         
